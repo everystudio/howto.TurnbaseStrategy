@@ -12,6 +12,9 @@ public class GridDebugObject : MonoBehaviour
     public void SetGridObject(GridObject gridObject)
     {
         this.gridObject = gridObject;
+    }
+    private void Update()
+    {
         textMeshPro.text = this.gridObject.ToString();
     }
 
