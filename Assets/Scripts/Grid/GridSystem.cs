@@ -25,6 +25,10 @@ public class GridSystem
             }
         }
     }
+    public Vector3 GetWorldPosition(GridPosition gridPosition)
+    {
+        return GetWorldPosition(gridPosition.x, gridPosition.z);
+    }
     public Vector3 GetWorldPosition(int x, int z)
     {
         return new Vector3(x, 0f, z) * cellSize;
@@ -53,5 +57,14 @@ public class GridSystem
     public GridObject GetGridObject(GridPosition gridPosition)
     {
         return gridObjectArr[gridPosition.x, gridPosition.z];
+    }
+
+    public bool IsValidGridPosition(GridPosition gridPosition)
+    {
+        return
+            0 <= gridPosition.x &&
+            0 <= gridPosition.z &&
+            gridPosition.x < width &&
+            gridPosition.z < height;
     }
 }
