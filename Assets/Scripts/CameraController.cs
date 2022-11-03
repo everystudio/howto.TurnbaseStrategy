@@ -19,6 +19,13 @@ public class CameraController : MonoBehaviour
     }
     private void Update()
     {
+        HandleMovement();
+        HandleRotation();
+        HandleZoom();
+    }
+
+    private void HandleMovement()
+    {
         Vector3 inputMoveDir = Vector3.zero;
         if (Input.GetKey(KeyCode.W))
         {
@@ -39,8 +46,9 @@ public class CameraController : MonoBehaviour
         float moveSpeed = 5f;
         Vector3 moveVector = transform.forward * inputMoveDir.z + transform.right * inputMoveDir.x;
         transform.position += moveVector * moveSpeed * Time.deltaTime;
-
-
+    }
+    private void HandleRotation()
+    {
         Vector3 rotationVector = Vector3.zero;
         if (Input.GetKey(KeyCode.Q))
         {
@@ -52,8 +60,9 @@ public class CameraController : MonoBehaviour
         }
         float rotationSpeed = 100f;
         transform.eulerAngles += rotationVector * rotationSpeed * Time.deltaTime;
-
-        CinemachineTransposer cinemachineTransposer = cinemachineVirtual.GetCinemachineComponent<CinemachineTransposer>();
+    }
+    private void HandleZoom()
+    {
         float zoomAmount = 1f;
         if (0 < Input.mouseScrollDelta.y)
         {
