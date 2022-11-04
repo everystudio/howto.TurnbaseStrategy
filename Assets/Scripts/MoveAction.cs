@@ -9,6 +9,7 @@ public class MoveAction : MonoBehaviour
 
     private Vector3 targetPosition;
     private Unit unit;
+    private bool isActive;
 
     private void Awake()
     {
@@ -18,6 +19,11 @@ public class MoveAction : MonoBehaviour
 
     private void Update()
     {
+        if (!isActive)
+        {
+            return;
+        }
+
         bool isWalking = false;
         Vector3 moveDir = (targetPosition - transform.position).normalized;
 
@@ -25,21 +31,24 @@ public class MoveAction : MonoBehaviour
         Vector3 moveVector = moveDir * (moveSpeed * Time.deltaTime);
         if (Vector3.Distance(transform.position, targetPosition) <= moveVector.magnitude)
         {
+            isActive = false;
             transform.position = targetPosition;
         }
         else
         {
             isWalking = true;
             transform.position += moveVector;
-            float rotateSpeed = 10f;
-            transform.forward = Vector3.Lerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
         }
         unitAnimator.SetBool("IsWalking", isWalking);
+
+        float rotateSpeed = 10f;
+        transform.forward = Vector3.Lerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
 
     }
 
     public void Move(GridPosition gridPosition)
     {
+        isActive = true;
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
     }
 

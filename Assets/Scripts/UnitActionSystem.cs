@@ -31,23 +31,21 @@ public class UnitActionSystem : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (TryHandleUnitSelection())
+            if (!TryHandleUnitSelection() && selectedUnit != null)
             {
-
-            }
-            else
-            {
-                if (selectedUnit != null)
+                GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMousePosition());
+                if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
                 {
-                    GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMousePosition());
-                    if (selectedUnit.GetMoveAction().IsValidActionGridPosition(mouseGridPosition))
-                    {
-                        selectedUnit.GetMoveAction().Move(mouseGridPosition);
+                    selectedUnit.GetMoveAction().Move(mouseGridPosition);
 
-                    }
                 }
             }
         }
+        if (Input.GetMouseButtonDown(1))
+        {
+            selectedUnit.GetSpinAction().Spin();
+        }
+
     }
 
     private bool TryHandleUnitSelection()
