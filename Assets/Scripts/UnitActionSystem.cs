@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class UnitActionSystem : MonoBehaviour
 {
@@ -41,6 +42,12 @@ public class UnitActionSystem : MonoBehaviour
             return;
         }
 
+        // ボタンの後ろでユニット選択とかができるのを防ぐ
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
+
         if (!Input.GetMouseButtonDown(0))
         {
             return;
@@ -65,24 +72,6 @@ public class UnitActionSystem : MonoBehaviour
             SetBusy();
             selectedAction.TakeAction(mouseGridPosition, ClearBusy);
         }
-
-        /*
-        switch (selectedAction)
-        {
-            case MoveAction moveAction:
-                if (moveAction.IsValidActionGridPosition(mouseGridPosition))
-                {
-                    SetBusy();
-                    moveAction.Move(mouseGridPosition, ClearBusy);
-                }
-                break;
-            case SpinAction spinAction:
-                SetBusy();
-                spinAction.Spin(ClearBusy);
-                break;
-        }
-        */
-
     }
 
     private void SetBusy()
