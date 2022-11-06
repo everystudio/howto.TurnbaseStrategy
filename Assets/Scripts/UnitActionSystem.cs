@@ -40,6 +40,11 @@ public class UnitActionSystem : MonoBehaviour
             return;
         }
 
+        if (!TurnSystem.Instance.IsPlayerTurn())
+        {
+            return;
+        }
+
         // ボタンの後ろでユニット選択とかができるのを防ぐ
         if (EventSystem.current.IsPointerOverGameObject())
         {
@@ -95,6 +100,10 @@ public class UnitActionSystem : MonoBehaviour
         {
             if (raycastHit.collider.TryGetComponent<Unit>(out Unit unit))
             {
+                if (unit.IsEnemy())
+                {
+                    return false;
+                }
                 if (selectedUnit != unit)
                 {
                     SetSelectedUnit(unit);
