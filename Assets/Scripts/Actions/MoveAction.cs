@@ -30,9 +30,8 @@ public class MoveAction : BaseAction
         Vector3 moveVector = moveDir * (moveSpeed * Time.deltaTime);
         if (Vector3.Distance(transform.position, targetPosition) <= moveVector.magnitude)
         {
-            isActive = false;
             transform.position = targetPosition;
-            onActionComplete();
+            ActionComplete();
         }
         else
         {
@@ -48,8 +47,7 @@ public class MoveAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        this.onActionComplete = onActionComplete;
-        isActive = true;
+        ActionStart(onActionComplete);
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
     }
 
