@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UnitActionSystemUI : MonoBehaviour
 {
     [SerializeField] private Transform actionButtonPrefab;
     [SerializeField] private Transform actionButtonContainerTransform;
+    [SerializeField] private TextMeshProUGUI actionPointsText;
 
     private List<ActionButtonUI> actionButtonUIList;
 
@@ -19,6 +21,10 @@ public class UnitActionSystemUI : MonoBehaviour
     {
         UnitActionSystem.Instance.OnSelectedUnitChanged += UnitActionSystem_OnSelectedUnitChanged;
         UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
+        UnitActionSystem.Instance.OnActionStarted += UnitActionSystem_OnActionStarted;
+
+        UpdateActionPoints();
+        CreateUnitActionButtons();
         UpdateSelectedVisual();
     }
 
@@ -32,6 +38,10 @@ public class UnitActionSystemUI : MonoBehaviour
         actionButtonUIList.Clear();
 
         Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+        if (selectedUnit == null)
+        {
+            return;
+        }
 
         foreach (var baseAction in selectedUnit.GetBaseActionArray())
         {
@@ -47,10 +57,16 @@ public class UnitActionSystemUI : MonoBehaviour
     {
         CreateUnitActionButtons();
         UpdateSelectedVisual();
+        UpdateActionPoints();
     }
     private void UnitActionSystem_OnSelectedActionChanged(object sender, System.EventArgs e)
     {
         UpdateSelectedVisual();
+    }
+
+    private void UnitActionSystem_OnActionStarted(object sender, System.EventArgs e)
+    {
+        UpdateActionPoints();
     }
 
 
@@ -60,7 +76,19 @@ public class UnitActionSystemUI : MonoBehaviour
         {
             actionButtonUI.UpdateSelectedVisual();
         }
-
     }
 
+    private void UpdateActionPoints()
+    {
+        Unit selectedUnit = UnitActionSystem.Instance.GetSelectedUnit();
+        if (selectedUnit != null)
+        {
+            actionPointsText.text = $"Action Points: {selectedUnit.GetActionPoints()}";
+        }
+        else
+        {
+            actionPointsText.text = "";
+        }
+
+    }
 }
