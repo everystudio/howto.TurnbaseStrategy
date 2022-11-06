@@ -50,15 +50,23 @@ public class UnitActionSystem : MonoBehaviour
         {
             return;
         }
-
-        HandleSelectedAction();
+        if (selectedAction != null)
+        {
+            HandleSelectedAction();
+        }
     }
 
     private void HandleSelectedAction()
     {
-
         GridPosition mouseGridPosition = LevelGrid.Instance.GetGridPosition(MouseWorld.GetMousePosition());
 
+        if (selectedAction.IsValidActionGridPosition(mouseGridPosition))
+        {
+            SetBusy();
+            selectedAction.TakeAction(mouseGridPosition, ClearBusy);
+        }
+
+        /*
         switch (selectedAction)
         {
             case MoveAction moveAction:
@@ -73,6 +81,7 @@ public class UnitActionSystem : MonoBehaviour
                 spinAction.Spin(ClearBusy);
                 break;
         }
+        */
 
     }
 
