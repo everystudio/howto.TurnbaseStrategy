@@ -110,4 +110,8 @@ public class UnitActionSystem : MonoBehaviour
     {
         return selectedUnit;
     }
+    public BaseAction GetSelectedAction()
+    {
+        return selectedAction;
+    }
 }
