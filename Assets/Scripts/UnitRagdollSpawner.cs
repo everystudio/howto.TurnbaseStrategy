@@ -5,6 +5,7 @@ using UnityEngine;
 public class UnitRagdollSpawner : MonoBehaviour
 {
     [SerializeField] private Transform ragdollPrefab;
+    [SerializeField] private Transform originalRootBone;
 
     private Healthsystem healthsystem;
 
@@ -16,6 +17,8 @@ public class UnitRagdollSpawner : MonoBehaviour
 
     private void Healthsystem_OnDead(object sender, System.EventArgs e)
     {
-        Instantiate(ragdollPrefab, transform.position, transform.rotation);
+        Transform ragdollTransform = Instantiate(ragdollPrefab, transform.position, transform.rotation);
+        UnitRagdoll unitRagdoll = ragdollTransform.GetComponent<UnitRagdoll>();
+        unitRagdoll.Setup(originalRootBone);
     }
 }
