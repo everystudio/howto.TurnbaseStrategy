@@ -5,6 +5,8 @@ using UnityEngine;
 public class UnitAnimator : MonoBehaviour
 {
     [SerializeField] private Animator animator;
+    [SerializeField] private Transform bulletProjectilePrefab;
+    [SerializeField] private Transform shootPoint;
     private void Awake()
     {
         if (TryGetComponent<MoveAction>(out MoveAction moveAction))
@@ -23,6 +25,13 @@ public class UnitAnimator : MonoBehaviour
             shootAction.OnShoot += (sender, e) =>
             {
                 animator.SetTrigger("Shoot");
+                Transform bulletProjectileTransform =
+                    Instantiate(bulletProjectilePrefab, shootPoint.position, Quaternion.identity);
+                BulletProjectile bulletProjectile = bulletProjectileTransform.GetComponent<BulletProjectile>();
+
+                Vector3 targetUnitShootAtPosition = e.targetUnit.GetWorldPosition();
+                targetUnitShootAtPosition.y = shootPoint.position.y;
+                bulletProjectile.Setup(targetUnitShootAtPosition);
             };
         }
     }
