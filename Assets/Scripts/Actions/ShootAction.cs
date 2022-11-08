@@ -18,6 +18,8 @@ public class ShootAction : BaseAction
     private Unit targetUnit;
     private bool canShootBullet;
 
+    public event EventHandler OnShoot;
+
     private void Update()
     {
         if (!isActive)
@@ -37,6 +39,7 @@ public class ShootAction : BaseAction
             case State.Shooting:
                 if (canShootBullet)
                 {
+                    OnShoot?.Invoke(this, EventArgs.Empty);
                     Shoot();
                     canShootBullet = false;
                 }
