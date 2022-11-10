@@ -32,8 +32,8 @@ public class MoveAction : BaseAction
         if (Vector3.Distance(transform.position, targetPosition) <= moveVector.magnitude)
         {
             transform.position = targetPosition;
-            ActionComplete();
             OnStopMoving?.Invoke(this, EventArgs.Empty);
+            ActionComplete();
         }
         else
         {
@@ -47,9 +47,9 @@ public class MoveAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        ActionStart(onActionComplete);
         this.targetPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
         OnStartMoving?.Invoke(this, EventArgs.Empty);
+        ActionStart(onActionComplete);
     }
 
     public override List<GridPosition> GetValidActionGridPositionList()
