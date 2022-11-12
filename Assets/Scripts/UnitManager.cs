@@ -5,12 +5,23 @@ using UnityEngine;
 
 public class UnitManager : MonoBehaviour
 {
+    public static UnitManager Instance { get; private set; }
+
     private List<Unit> unitList;
     private List<Unit> friendlyUnitList;
     private List<Unit> enemyUnitList;
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
         unitList = new List<Unit>();
         friendlyUnitList = new List<Unit>();
         enemyUnitList = new List<Unit>();
@@ -48,6 +59,19 @@ public class UnitManager : MonoBehaviour
         {
             friendlyUnitList.Remove(unit);
         }
+    }
+
+    public List<Unit> GetUnitList()
+    {
+        return unitList;
+    }
+    public List<Unit> GetFriendlyUnitList()
+    {
+        return friendlyUnitList;
+    }
+    public List<Unit> GetEnemyUnitList()
+    {
+        return enemyUnitList;
     }
 
 }

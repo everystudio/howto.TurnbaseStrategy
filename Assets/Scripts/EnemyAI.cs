@@ -39,9 +39,15 @@ public class EnemyAI : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer < 0f)
                 {
-                    state = State.Busy;
-                    TakeEnemyAIAction(SetStateTakingTurn);
-                    TurnSystem.Instance.NextTurn();
+                    if (TryTakeEnemyAIAction(SetStateTakingTurn))
+                    {
+                        state = State.Busy;
+                    }
+                    else
+                    {
+                        // 行動できる敵がいません
+                        TurnSystem.Instance.NextTurn();
+                    }
                 }
                 break;
             case State.Busy:
@@ -63,11 +69,38 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    private void TakeEnemyAIAction(System.Action onEnemyAIActionComplete)
+    private bool TryTakeEnemyAIAction(System.Action onEnemyAIActionComplete)
     {
-
+        Debug.Log("Take Enemy AI Action");
+        foreach (Unit enemyUnit in UnitManager.Instance.GetEnemyUnitList())
+        {
+            if (TryTakeEnemyAIAction(enemyUnit, onEnemyAIActionComplete))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
+    private bool TryTakeEnemyAIAction(Unit enemyUnit, System.Action onEnemyAIActionComplete)
+    {
+        SpinAction spinAction = enemyUnit.GetSpinAction();
+
+        GridPosition actionGridPosition = enemyUnit.GetGridPosition();
+
+        if (!spinAction.IsValidActionGridPosition(actionGridPosition))
+        {
+            return false;
+        }
+
+        if (!enemyUnit.TrySpendActionPointsToTakeAction(spinAction))
+        {
+            return false;
+        }
+        Debug.Log("Spin Action");
+        spinAction.TakeAction(actionGridPosition, onEnemyAIActionComplete);
+        return true;
+    }
 
 
 }
