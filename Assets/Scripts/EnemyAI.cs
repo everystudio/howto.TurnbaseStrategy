@@ -39,15 +39,21 @@ public class EnemyAI : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer < 0f)
                 {
-                    state = State.WaitingForEnemyTurn;
+                    state = State.Busy;
+                    TakeEnemyAIAction(SetStateTakingTurn);
                     TurnSystem.Instance.NextTurn();
                 }
                 break;
             case State.Busy:
                 break;
         }
-
     }
+    private void SetStateTakingTurn()
+    {
+        timer = 0.5f;
+        state = State.TakingTurn;
+    }
+
     private void TurnSystem_OnTurnChanged(object sender, System.EventArgs e)
     {
         if (!TurnSystem.Instance.IsPlayerTurn())
@@ -55,6 +61,11 @@ public class EnemyAI : MonoBehaviour
             state = State.TakingTurn;
             timer = 2f;
         }
+    }
+
+    private void TakeEnemyAIAction(System.Action onEnemyAIActionComplete)
+    {
+
     }
 
 
