@@ -144,5 +144,9 @@ public class Unit : MonoBehaviour
         OnAnyUnitDead?.Invoke(this, EventArgs.Empty);
     }
 
+    public float GetHealthNormalized()
+    {
+        return healthsystem.GetHealthNormalized();
+    }
 
 }
