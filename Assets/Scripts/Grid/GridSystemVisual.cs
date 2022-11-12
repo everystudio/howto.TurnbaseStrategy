@@ -45,12 +45,18 @@ public class GridSystemVisual : MonoBehaviour
                 gridSystemVisualSingleArray[x, z] = gridSystemVisualSingleTransform.GetComponent<GridSystemVisualSingle>();
             }
         }
+
+        UnitActionSystem.Instance.OnSelectedActionChanged += UnitActionSystem_OnSelectedActionChanged;
+        LevelGrid.Instance.OnAnyUnitMovedGridPosition += LevelGrid_OnAnyUnitMovedGridPosition;
+        UpdateGridVisual();
     }
 
+    /*
     private void Update()
     {
         UpdateGridVisual();
     }
+    */
 
     public void HideAllGridPosition()
     {
@@ -85,4 +91,15 @@ public class GridSystemVisual : MonoBehaviour
                 selectedAction.GetValidActionGridPositionList());
         }
     }
+
+    private void UnitActionSystem_OnSelectedActionChanged(object sender, System.EventArgs e)
+    {
+        UpdateGridVisual();
+    }
+    private void LevelGrid_OnAnyUnitMovedGridPosition(object sender, System.EventArgs e)
+    {
+        UpdateGridVisual();
+    }
+
+
 }
