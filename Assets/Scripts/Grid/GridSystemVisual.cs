@@ -6,7 +6,23 @@ public class GridSystemVisual : MonoBehaviour
 {
     public static GridSystemVisual Instance { get; private set; }
 
+    [System.Serializable]
+    public struct GridVisualTypeMaterial
+    {
+        public GridVisualType gridVisualType;
+        public Material material;
+    }
+
+    public enum GridVisualType
+    {
+        White,
+        Blue,
+        Red,
+        Yellow
+    }
+
     [SerializeField] private Transform gridSystemVisualSinglePrefab;
+    [SerializeField] private List<GridVisualTypeMaterial> gridVisualTypeMaterialList;
 
     private GridSystemVisualSingle[,] gridSystemVisualSingleArray;
 
@@ -71,11 +87,12 @@ public class GridSystemVisual : MonoBehaviour
         }
     }
 
-    public void ShowGridPositionList(List<GridPosition> gridPositionList)
+    public void ShowGridPositionList(List<GridPosition> gridPositionList, GridVisualType gridVisualType)
     {
+        Material material = GetGridVisualTypeMaterial(gridVisualType);
         foreach (GridPosition gridPosition in gridPositionList)
         {
-            gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Show();
+            gridSystemVisualSingleArray[gridPosition.x, gridPosition.z].Show(material);
         }
     }
 
@@ -85,10 +102,27 @@ public class GridSystemVisual : MonoBehaviour
 
         BaseAction selectedAction = UnitActionSystem.Instance.GetSelectedAction();
 
+        GridVisualType gridVisualType;
+        switch (selectedAction)
+        {
+            default:
+            case MoveAction moveAction:
+                gridVisualType = GridVisualType.White;
+                break;
+            case SpinAction spinAction:
+                gridVisualType = GridVisualType.Blue;
+                break;
+            case ShootAction shootAction:
+                gridVisualType = GridVisualType.Red;
+                break;
+
+        }
+
         if (selectedAction != null)
         {
             ShowGridPositionList(
-                selectedAction.GetValidActionGridPositionList());
+                selectedAction.GetValidActionGridPositionList(),
+                gridVisualType);
         }
     }
 
@@ -99,6 +133,19 @@ public class GridSystemVisual : MonoBehaviour
     private void LevelGrid_OnAnyUnitMovedGridPosition(object sender, System.EventArgs e)
     {
         UpdateGridVisual();
+    }
+
+    private Material GetGridVisualTypeMaterial(GridVisualType gridVisualType)
+    {
+        foreach (GridVisualTypeMaterial gridVisualTypeMaterial in gridVisualTypeMaterialList)
+        {
+            if (gridVisualTypeMaterial.gridVisualType == gridVisualType)
+            {
+                return gridVisualTypeMaterial.material;
+            }
+        }
+        Debug.LogError("Could not find Material:" + gridVisualType);
+        return null;
     }
 
 
