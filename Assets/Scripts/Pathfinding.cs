@@ -12,6 +12,7 @@ public class Pathfinding : MonoBehaviour
 
 
     [SerializeField] private Transform gridDebugObjectPrefab;
+    [SerializeField] private LayerMask obstaclesLayerMask;
 
     private int width;
     private int height;
@@ -42,8 +43,42 @@ public class Pathfinding : MonoBehaviour
             (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
         gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
 
-        if (TryGetNode(1, 0, out PathNode node1)) { node1.SetIsWalkable(false); }
-        if (TryGetNode(1, 1, out PathNode node2)) { node2.SetIsWalkable(false); }
+        for (int x = 0; x < width; x++)
+        {
+            for (int z = 0; z < height; z++)
+            {
+                GridPosition gridPosition = new GridPosition(x, z);
+                Vector3 worldPosition = LevelGrid.Instance.GetWorldPosition(gridPosition);
+
+                float raycastOffsetDistance = 5f;
+                /*
+                if (Physics.Raycast(
+                    worldPosition + Vector3.down * raycastOffsetDistance,
+                    Vector3.up,
+                    raycastOffsetDistance * 2f,
+                    obstaclesLayerMask))
+                {
+                    if (TryGetNode(x, z, out PathNode pathNode))
+                    {
+                        pathNode.SetIsWalkable(false);
+                    }
+                }
+                */
+
+                if (Physics.BoxCast(
+                    worldPosition + Vector3.down * raycastOffsetDistance,
+                    Vector3.one * cellSize * 0.25f, Vector3.up, Quaternion.identity,
+                    raycastOffsetDistance * 2f, obstaclesLayerMask))
+                {
+                    if (TryGetNode(x, z, out PathNode pathNode))
+                    {
+                        pathNode.SetIsWalkable(false);
+                    }
+                }
+
+            }
+        }
+
     }
 
     public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
