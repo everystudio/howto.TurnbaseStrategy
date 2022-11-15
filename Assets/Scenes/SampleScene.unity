@@ -2964,6 +2964,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridDebugObjectPrefab: {fileID: 5585065088368710256, guid: cd2cf74e2a326ed468349d5791d53372,
     type: 3}
+  width: 10
+  height: 10
+  cellSize: 2
 --- !u!4 &1908412273
 Transform:
   m_ObjectHideFlags: 0
