@@ -41,6 +41,9 @@ public class Pathfinding : MonoBehaviour
         gridSystem = new GridSystem<PathNode>(width, height, cellSize,
             (GridSystem<PathNode> g, GridPosition gridPosition) => new PathNode(gridPosition));
         gridSystem.CreateDebugObjects(gridDebugObjectPrefab);
+
+        if (TryGetNode(1, 0, out PathNode node1)) { node1.SetIsWalkable(false); }
+        if (TryGetNode(1, 1, out PathNode node2)) { node2.SetIsWalkable(false); }
     }
 
     public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
@@ -84,10 +87,16 @@ public class Pathfinding : MonoBehaviour
 
             foreach (PathNode neighbourNode in GetNeighbourList(currentNode))
             {
+                if (!neighbourNode.IsWalkable())
+                {
+                    closedList.Add(neighbourNode);
+                }
+
                 if (closedList.Contains(neighbourNode))
                 {
                     continue;
                 }
+
 
                 int tentativeGCost = currentNode.GetGCost() + CalculateDistance(
                     currentNode.GetGridPosition(), neighbourNode.GetGridPosition());
