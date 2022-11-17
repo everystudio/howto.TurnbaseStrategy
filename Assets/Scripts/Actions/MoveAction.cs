@@ -90,6 +90,15 @@ public class MoveAction : BaseAction
                     continue;
                 }
 
+                if (!Pathfinding.Instance.IsWalkableGridPosition(testGridPosition))
+                {
+                    continue;
+                }
+                if (!Pathfinding.Instance.HasPath(unitGridPosition, testGridPosition))
+                {
+                    continue;
+                }
+
                 validGridPositionList.Add(testGridPosition);
             }
         }

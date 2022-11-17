@@ -235,4 +235,14 @@ public class Pathfinding : MonoBehaviour
         }
         return gridPositionList;
     }
+
+    public bool IsWalkableGridPosition(GridPosition gridPosition)
+    {
+        return gridSystem.GetGridObject(gridPosition).IsWalkable();
+    }
+
+    public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        return FindPath(startGridPosition, endGridPosition) != null;
+    }
 }
