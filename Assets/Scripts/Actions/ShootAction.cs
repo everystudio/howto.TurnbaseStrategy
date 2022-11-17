@@ -18,6 +18,8 @@ public class ShootAction : BaseAction
     private Unit targetUnit;
     private bool canShootBullet;
 
+    [SerializeField] private LayerMask obstacleLayerMask;
+
     public event EventHandler<OnShootEventArgs> OnShoot;
     public class OnShootEventArgs : EventArgs
     {
@@ -138,6 +140,20 @@ public class ShootAction : BaseAction
                     // 同じチーム
                     continue;
                 }
+
+                Vector3 shootDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                float unitShoulderHeight = 1.7f;
+                if (Physics.Raycast(
+                    unit.GetWorldPosition() + Vector3.up * unitShoulderHeight,
+                    shootDir,
+                    Vector3.Distance(unit.GetWorldPosition(), targetUnit.GetWorldPosition()),
+                    obstacleLayerMask
+                    ))
+                {
+                    // 攻撃対象までの間に邪魔なオブジェクトがありました
+                    continue;
+                }
+
 
                 validGridPositionList.Add(testGridPosition);
             }
