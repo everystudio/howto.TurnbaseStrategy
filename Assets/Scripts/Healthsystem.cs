@@ -30,7 +30,7 @@ public class Healthsystem : MonoBehaviour
         {
             Die();
         }
-        Debug.Log(health);
+        //Debug.Log(health);
     }
 
     private void Die()
