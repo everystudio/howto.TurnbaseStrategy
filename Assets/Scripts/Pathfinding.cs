@@ -81,7 +81,7 @@ public class Pathfinding : MonoBehaviour
 
     }
 
-    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition)
+    public List<GridPosition> FindPath(GridPosition startGridPosition, GridPosition endGridPosition, out int pathLength)
     {
         List<PathNode> openList = new List<PathNode>();
         List<PathNode> closedList = new List<PathNode>();
@@ -115,6 +115,7 @@ public class Pathfinding : MonoBehaviour
             if (currentNode == endNode)
             {
                 // 目的のノードの到達しました
+                pathLength = endNode.GetFCost();
                 return CalculatePath(endNode);
             }
             openList.Remove(currentNode);
@@ -152,6 +153,7 @@ public class Pathfinding : MonoBehaviour
             }
         }
         // パス見つからず
+        pathLength = 0;
         return null;
     }
 
@@ -243,6 +245,13 @@ public class Pathfinding : MonoBehaviour
 
     public bool HasPath(GridPosition startGridPosition, GridPosition endGridPosition)
     {
-        return FindPath(startGridPosition, endGridPosition) != null;
+        return FindPath(startGridPosition, endGridPosition, out int pathLength) != null;
     }
+
+    public int GetPathLength(GridPosition startGridPosition, GridPosition endGridPosition)
+    {
+        FindPath(startGridPosition, endGridPosition, out int pathLength);
+        return pathLength;
+    }
+
 }
