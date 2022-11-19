@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GrenadeProjectile : MonoBehaviour
 {
     private Vector3 targetPosition;
+    private Action onGrenadeBehaviourComplete;
 
     private void Update()
     {
@@ -26,15 +28,16 @@ public class GrenadeProjectile : MonoBehaviour
                     targetUnit.Damage(30);
                 }
             }
-
+            onGrenadeBehaviourComplete();
             Destroy(gameObject);
         }
 
     }
 
-    public void Setup(GridPosition targetGridPosition)
+    public void Setup(GridPosition targetGridPosition, Action onGrenadeBehaviourComplete)
     {
         targetPosition = LevelGrid.Instance.GetWorldPosition(targetGridPosition);
+        this.onGrenadeBehaviourComplete = onGrenadeBehaviourComplete;
     }
 
 }
