@@ -10,5 +10,9 @@ public class ScreenShakeActions : MonoBehaviour
         {
             ScreenShake.Instance.Shake();
         };
+        GrenadeProjectile.OnAnyGrenadeExploded += (sender, e) =>
+        {
+            ScreenShake.Instance.Shake(5f);
+        };
     }
 }
