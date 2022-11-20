@@ -35,7 +35,6 @@ public class SwordAction : BaseAction
                 Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
                 float rotateSpeed = 10f;
                 transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * rotateSpeed);
-                OnAnySwordHit?.Invoke(this, EventArgs.Empty);
                 break;
             case State.SwingingSwordAfterHit:
                 break;
@@ -56,6 +55,7 @@ public class SwordAction : BaseAction
                 float afterHitStateTimer = 0.5f;
                 stateTimer = afterHitStateTimer;
                 targetUnit.Damage(100);
+                OnAnySwordHit?.Invoke(this, EventArgs.Empty);
                 break;
             case State.SwingingSwordAfterHit:
                 OnSwordActionCompleted?.Invoke(this, EventArgs.Empty);
