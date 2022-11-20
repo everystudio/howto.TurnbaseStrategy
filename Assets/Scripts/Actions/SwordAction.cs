@@ -5,6 +5,19 @@ using UnityEngine;
 
 public class SwordAction : BaseAction
 {
+    public static event EventHandler OnAnySwordHit;
+
+    public event EventHandler OnSwordActionStarted;
+    public event EventHandler OnSwordActionCompleted;
+    private enum State
+    {
+        SwingingSwordBeforeHit,
+        SwingingSwordAfterHit,
+    }
+    private State state;
+    [SerializeField] private float stateTimer;
+    private Unit targetUnit;
+
     private int maxSwordDistance = 1;
 
     private void Update()
@@ -13,8 +26,44 @@ public class SwordAction : BaseAction
         {
             return;
         }
-        ActionComplete();
+
+        stateTimer -= Time.deltaTime;
+
+        switch (state)
+        {
+            case State.SwingingSwordBeforeHit:
+                Vector3 aimDir = (targetUnit.GetWorldPosition() - unit.GetWorldPosition()).normalized;
+                float rotateSpeed = 10f;
+                transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime * rotateSpeed);
+                OnAnySwordHit?.Invoke(this, EventArgs.Empty);
+                break;
+            case State.SwingingSwordAfterHit:
+                break;
+        }
+
+        if (stateTimer <= 0f)
+        {
+            NextState();
+        }
     }
+
+    private void NextState()
+    {
+        switch (state)
+        {
+            case State.SwingingSwordBeforeHit:
+                state = State.SwingingSwordAfterHit;
+                float afterHitStateTimer = 0.5f;
+                stateTimer = afterHitStateTimer;
+                targetUnit.Damage(100);
+                break;
+            case State.SwingingSwordAfterHit:
+                OnSwordActionCompleted?.Invoke(this, EventArgs.Empty);
+                ActionComplete();
+                break;
+        }
+    }
+
 
     public override string GetActionName()
     {
@@ -70,7 +119,12 @@ public class SwordAction : BaseAction
 
     public override void TakeAction(GridPosition gridPosition, Action onActionComplete)
     {
-        Debug.Log("Swordアクション");
+        targetUnit = LevelGrid.Instance.GetUnitAtGridPosition(gridPosition);
+        state = State.SwingingSwordBeforeHit;
+        float beforeHitStateTimer = 0.7f;
+        stateTimer = beforeHitStateTimer;
+
+        OnSwordActionStarted?.Invoke(this, EventArgs.Empty);
         ActionStart(onActionComplete);
     }
 

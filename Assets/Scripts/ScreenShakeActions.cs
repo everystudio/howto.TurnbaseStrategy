@@ -14,5 +14,9 @@ public class ScreenShakeActions : MonoBehaviour
         {
             ScreenShake.Instance.Shake(5f);
         };
+        SwordAction.OnAnySwordHit += (sender, e) =>
+        {
+            ScreenShake.Instance.Shake(2f);
+        };
     }
 }
