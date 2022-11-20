@@ -149,7 +149,7 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""id"": ""82f0a67f-efba-4354-bf9f-146b7723e9c6"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Clamp(min=-1,max=1)"",
                     ""groups"": """",
                     ""action"": ""CameraZoom"",
                     ""isComposite"": false,
