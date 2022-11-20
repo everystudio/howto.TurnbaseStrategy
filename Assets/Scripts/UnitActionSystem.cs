@@ -51,7 +51,7 @@ public class UnitActionSystem : MonoBehaviour
             return;
         }
 
-        if (!InputManager.Instance.IsMouseButtonDown())
+        if (!InputManager.Instance.IsMouseButtonDownThisFrame())
         {
             return;
         }

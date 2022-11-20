@@ -33,9 +33,13 @@ public class InputManager : MonoBehaviour
 #endif
     }
 
-    public bool IsMouseButtonDown()
+    public bool IsMouseButtonDownThisFrame()
     {
+#if USE_NEW_INPUT_SYSTEM
+        return playerInputActions.Player.Click.WasPressedThisFrame();
+#else
         return Input.GetMouseButtonDown(0);
+#endif
     }
 
     public Vector3 GetCameraMoveVector()
